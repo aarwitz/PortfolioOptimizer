@@ -6,4 +6,5 @@ Program uses Markowitz mean return-variance portfolio theory to create optimal p
 The function for backtesting then allows the user to test how this model performs in different periods. The user enters a second set of beginning and ending dates, and the program returns the model's performance in that period. For example, a model created using data from only 2019 would be revealed as insufficient if backtested in the first quarter of 2020.
 
 To start: Run main to start (i.e. enter main() into python command line).
+
 Make sure: Pandas and Numpy installed
