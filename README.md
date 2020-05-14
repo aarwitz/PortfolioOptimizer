@@ -11,4 +11,4 @@ The function for backtesting then allows the user to test how this model perform
   
   
    
-To run: make sure have Pandas and Numpy installed, then run main to start (i.e. enter main() into python command line).
+To run: make sure you have Pandas and Numpy installed, then run main to start (i.e. enter main() into python command line).
