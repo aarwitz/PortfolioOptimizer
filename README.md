@@ -1,8 +1,8 @@
 # PortfolioOptimizer
 Portfolio optimization in Python
 
-Markowitz maean return-variance portfolio theory is used to create the optimal portfolio. The user inputs a list of tickers and beginning and ending dates between which data is retrieved from YahooFinance's API. A model which outputs the lowest-variance portfolio for any given return is then created, along with a plot of this. This plot is known as the efficient frontier: the y-xis is a return and the x-axis is the lowest possible standard deviation.
+Program uses Markowitz mean return-variance portfolio theory to create optimal portfolios and provides backtesting capabilities. The user inputs a list of tickers and a period of time for which data is retrieved from YahooFinance's API. A model which outputs the lowest-variance portfolio for any given return is then created, along with a plot. This plot is known as the efficient frontier: the y-xis is daily returns and the x-axis is the lowest possible standard deviation possible for that daily return.
 
-The function for backtesting then allows the user to test how this model performs in different periods. The user enters a second set of beginning and ending dates, and the program returns the return and standard deviation of the model's optimal portfolio. For example, a model created in 2019 would not perform well in the first quarter of 2020.
+The function for backtesting then allows the user to test how this model performs in different periods. The user enters a second set of beginning and ending dates, and the program returns the model's performance in that period. For example, a model created using data from only 2019 would be revealed as insufficient if backtested in the first quarter of 2020.
 
 Run main to start (i.e. enter main() into python command line).
