@@ -23,7 +23,7 @@ def main():
     
     optimal_portfolios = find_optimal_portfolios(start1,end1,tickers)
     
-    # Ask user whether to backtest or inspect
+    # Ask user whether to backtest or restart
     next_step = backtest_or_restart()
     if next_step =='backtest':
         backtest(start1,end1,tickers)
