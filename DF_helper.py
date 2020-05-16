@@ -119,20 +119,3 @@ def covar_to_np(returns):
         for j in range(len(df.iloc[0])):
             array[i][j]=df.iloc[i][j]
     return array
-
-
-# def markets_open(begin,end):
-#     print(begin)
-#     print(end)
-    
-#     spl = begin.split('_')
-#     print(spl)
-#     print('%d %d %d'%spl)
-    
-#     weekend =  ['Saturday','Sunday']
-#     day=datetime.datetime(spl[0],spl[1],spl[2])
-#     if weekend.count(begin) != 0:
-#         print('Sorry, %s is a weekend'%begin)
-#     elif weekend.count(end) != 0:
-#         print('Sorry, %s is a weekend'%end)
-#     return
