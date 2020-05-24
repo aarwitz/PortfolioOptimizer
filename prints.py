@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jul 11 20:13:23 2019
-
-@author: aaronhorwin
+Prints
 """
 
 from DF_helper import *
 from matrix_manip import *
 from user import *
-
 
 #
 def print_glob_min_variance(w_glob_min,r_glob_min,tickers,mean_returns,covar,stds,start1,end1):
@@ -30,8 +27,32 @@ def print_glob_min_variance(w_glob_min,r_glob_min,tickers,mean_returns,covar,std
     print_allocations(w_glob_min,tickers)
     print('\nThis portfolio has a daily return of: '+ '{0:.{1}f}'.format((r_glob_min*100),4) + '%')
     print(' and a daily standard deviation of: '+ '{0:.{1}f}'.format((p_std*100),4) + '%')
-    print('_'*100)
+    print_line()
 
 def print_allocations(w,tickers):
     for x in range(len(tickers)):
         print(str(tickers[x]) + ': ' + '{0:.{1}f}'.format((w[x]*100),4)+'%')
+        
+        
+def print_realtest_results(r,std,r_test,weights,tickers,start1,end1,start2,end2,i):
+    print('\n\nBacktest %d'%(i+1)) #1 bcuz python index starts at 0
+    if r>r_test:
+        print('**Portfolio has higher returns than the model predicted')
+    elif r<r_test:
+        print('**Portfolio has lower returns than the model predicted')
+    else:
+        print('**The portfolio performed as predicted')
+    print('\nAllocations of optimal portfolio that returns %.4f%% daily from %s to %s:'%(r_test*100,start1,end1))
+    print_allocations(weights,tickers)
+    print('\nThat portfolio performs as follows from %s to %s:'%(start2,end2))
+    print('Return: ' + '{0:.{1}f}'.format((r*100),4) + '%')
+    print('Standard deviation: ' + '{0:.{1}f}'.format((std*100),4) + '%')
+    print_line()
+    
+def print_portfolio(r,std):
+    print('Return: %f'%r)
+    print('Standard Deviation: %f'%std)
+    
+def print_line():
+    print('_'*80)
+    
