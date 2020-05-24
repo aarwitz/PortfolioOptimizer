@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jul  6 12:41:04 2019
-
-@author: aaronhorwin
+Use pandas dataframes to retrieve data from YahooFinance
 """
 
 import pandas as pd
-import pandas_datareader as wb
 import numpy as np
 import yfinance as yf
-from datetime import date
-import calendar
-import datetime
+from user import *
+
 
 def get_prices(begin,end,tickers):
     """
@@ -23,9 +19,8 @@ def get_prices(begin,end,tickers):
     df= pd.DataFrame() #initialize empty DF, iterate each ticker's data in
     for ticker in tickers:
         Data = yf.Ticker(ticker)
-        tickerDf = Data.history(period='1d', start=begin, end=end )
+        tickerDf = Data.history(period='1d', start=begin, end=end)
         df[ticker]=tickerDf['Close']
-    
     return df
     
 
@@ -36,6 +31,7 @@ def get_returns(prices):
     """
     returns = prices.pct_change()
     return returns
+
 
 def returns_to_np(prices):
     """
@@ -48,12 +44,14 @@ def returns_to_np(prices):
         array[i]=df.iloc[i]
     return array
 
+
 def take_mean_of_returns(returns):
     """
     Input dataframe of returns
     returns a df
     """
     return returns.mean()
+
 
 def np_take_mean_of_returns(returns):
     """
@@ -66,20 +64,23 @@ def np_take_mean_of_returns(returns):
         array[i]=df.iloc[i]
     return array
 
+
 def get_std(returns):
     """
     input df of returns
-    returns df of standard deviations
+    returns df of sample standard deviations
     """
     return returns.std()
+
 
 def std_to_np(returns):
     """
     input df of returns 
-    returns array of standard deviations
+    returns array of sample standard deviations
     """
     std=get_std(returns)
     return np.array(std)
+
 
 def get_var(returns):
     """
@@ -88,6 +89,7 @@ def get_var(returns):
     """
     var=returns.var()
     return var
+
 
 def var_to_np(returns):
     """
@@ -100,6 +102,7 @@ def var_to_np(returns):
         array[x]=var[x]
     return array
 
+
 def get_covar(returns):
     """
     input dataframe of returns
@@ -107,6 +110,7 @@ def get_covar(returns):
     """
     df = returns.cov()
     return df 
+
 
 def covar_to_np(returns):
     """
@@ -119,3 +123,13 @@ def covar_to_np(returns):
         for j in range(len(df.iloc[0])):
             array[i][j]=df.iloc[i][j]
     return array
+
+
+def get_corrmat():
+    # initial ui
+    start1,end1,tickers = get_portfolio_parameters()
+    prices=get_prices(start1,end1,tickers)
+    returns=get_returns(prices)
+    return returns.corr()
+    
+    
