@@ -7,7 +7,6 @@ Created on Sat Jul  6 11:30:40 2019
 """
 
 import numpy as np
-from prints import *
 
 
 def np_calc_portfolio_return(mean_returns,weights):
@@ -19,13 +18,6 @@ def np_calc_portfolio_return(mean_returns,weights):
     r=np.dot(mean_returns,weights)
     return r
 
-
-def calc_multiple_portfolio_stdevs(covar,weights):
-    portfolio_stdevs=np.zeros(len(weights))
-    for i in range(len(weights)):
-        stdev=calc_portfolio_stdev(covar,weights[i])
-        portfolio_stdevs[i]=stdev
-    return portfolio_stdevs
 
 def calc_portfolio_stdev(covar,weights):
     """
@@ -42,14 +34,36 @@ def calc_global_min_variance_portfolio(covar):
     Input 2d np array covar
     Returns a 1d array of weights corresponding to the
     minimum variance portfolio
+    
+    A * z = b --> z = A^-1 * b
     """
-    array_ones = np.ones(len(covar))  # creates a 1x3 array containing ones
-    i_covar=np.linalg.inv(covar)   # takes matrix inverse of covar
-    Lambda = np.dot(np.dot(array_ones,i_covar),array_ones)    # adds up the inverse of the variances
-    return np.dot(array_ones,i_covar)*1/Lambda  # multiplies each variance by the inverse of Lambda
+    # Get dimension
+    n = len(covar)
+    
+    # creates a 1xn 2d array containing 0's
+    row = np.array([np.ones(n)])
+    # creates an nx1 2d array containin n-1 0's and one 1
+    col = np.concatenate((row.T,np.array([[0]])),axis=0)
+    
+    # Concat row below covar matrix
+    A_with_bottom_row=np.concatenate((2*covar,row),axis=0)
+    # Concat col beside covar matrix
+    A = np.concatenate((A_with_bottom_row,col),axis=1)
+    
+    # b is vector of linear equation's solutions
+    b=np.concatenate((np.zeros([n,1]),np.array([[1]])),axis=0)
+
+    # Solve by inverting A
+    z = np.linalg.solve(A,b)
+    
+    # Flatten into 1d
+    z=z.flatten()
+    
+    return z[:-1]
 
 
-def calc_efficient_portfolios(mean_returns,covar,rs):
+
+def efficient_frontier(mean_returns,covar,rs):
     """
     input a 1d array of returns, 2d array of covar, and 1d of r's
     returns a 1d array of the standard deviations and a 2d array
@@ -58,18 +72,12 @@ def calc_efficient_portfolios(mean_returns,covar,rs):
     """
     sigmas=np.zeros(len(rs))
     weights=np.zeros((len(rs),len(mean_returns)))
-    returns=rs
+    # returns=rs
     for i in range(len(rs)):
-        w=calc_min_variance_portfolio(mean_returns,covar,rs[i])
-        sigma=calc_portfolio_stdev(covar,w)
-        r=w@mean_returns
-        
-        # input the  sigmas and weights to their arrays
-        sigmas[i]=sigma
-        weights[i]= w
-        
-    print()
-    return sigmas,weights,returns
+        weights[i]=calc_min_variance_portfolio(mean_returns,covar,rs[i])
+        sigmas[i]=calc_portfolio_stdev(covar,weights[i])
+    return sigmas,weights
+
 
 
 def calc_min_variance_portfolio(e,covar,r):
@@ -79,26 +87,43 @@ def calc_min_variance_portfolio(e,covar,r):
     Returns a 1d array of the weights for the minimum
     variance portfolio, given the desired return
     """
-    mu=np.array(e).reshape(len(e),1)
+    n = len(covar)
+    
+    # vectors of ones
+    ones = np.array([np.ones(n)])
+    ones_T = ones.T
+    
+    # Transpose expected returns
+    e_T = np.array([e]).T
 
-    # adds a colum of ones next to the expected returns
-    mu_ones = (np.insert(mu,1,1,axis=1))
+    # Create cols
+    col1 = np.concatenate((e_T,[[0]],[[0]]),axis=0)
+    col2 = np.concatenate((ones_T,[[0]],[[0]]),axis=0)
     
-    #take inverse of covariance
-    i_covar=np.linalg.inv(covar)
-    
-    #transpose mu_ones
-    t_mu_ones=np.transpose(mu_ones)
-    
-    # A multiplies the expected returns and the covariance matrix
-    # the bottom row is the sum of that multiplication
-    A=np.dot(np.dot(t_mu_ones,i_covar),mu_ones)
-    i_A=np.linalg.inv(A)
+    # Concat everything into one matrix
+    A_with_bottom_rows=np.concatenate((2*covar,[e],ones),axis=0)
+    A = np.concatenate((A_with_bottom_rows,col1,col2),axis=1)
 
-    # this returns a matrix of the weights for the minimum variance
-    weights = np.dot(np.dot(np.dot(i_covar,mu_ones),i_A),np.array([[r],[1]]))
+    # Create b
+    zeros = np.array([np.zeros(n)]).T
+    b = np.concatenate((zeros,np.array([[r]]),np.array([[1]])),axis=0)
     
-    # flatten into 1d array for purpose of dot products
-    weights=weights.flatten()
+    # Solve by inverting A
+    z = np.linalg.solve(A,b)
     
-    return weights
+    # Flatten into 1d
+    z=z.flatten()
+    
+    return z[:-2]
+
+
+# def simulate
+
+
+def daily_to_annual(daily_r):
+    """
+    Input daily return as a percent
+    Returns that return on an annual basis as a percent
+    """
+    annual_r = (1+daily_r/100)**(365) - 1
+    return annual_r*100
