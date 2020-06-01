@@ -84,7 +84,7 @@ class MCStockSimulator:
         using the above method, generate_simulated_stock_values
         """
         dt=1/self.nper_per_year
-        array_periods=np.arange(0,self.t+dt,dt)   # array has to go until self.t+dt to get that last period
+        array_periods=np.arange(0,self.t+dt,dt)   # array has to go until self.t+dt to get the last value
         final_values=np.zeros(num_trials)
         for x in range(num_trials):
             points=self.generate_simulated_stock_values()

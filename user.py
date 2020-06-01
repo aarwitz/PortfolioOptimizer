@@ -5,6 +5,7 @@ Interact with user
 """
 
 import numpy as np
+import pandas as pd
 from prints import *
 
 def get_portfolio_parameters():
@@ -13,7 +14,7 @@ def get_portfolio_parameters():
     tickers = tickers.split(' ')
     
     # establish dates to optimize based on
-    start1 = input('Enter a start date for the analysis (In format: 2020-1-28): ') 
+    start1 = input('Enter a start date for the analysis (In format: year-month-day): ') 
     end1 = input('Enter an end date: ')
 
     return start1,end1,tickers
@@ -60,3 +61,8 @@ def initialize_MCsimulation():
     years = input('Enter how many years to simulate: ')
     n = input('Enter how many trials to run: ')
     return r,std,years,n
+ 
+    
+def skip_or_remove():
+    s_or_r=input('Enter skip to conduct analysis in period when data on all tickers is available or remove to remove any tickers unavailable during inputted period: ')
+    return s_or_r

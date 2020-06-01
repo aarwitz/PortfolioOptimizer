@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jul  6 11:30:40 2019
-
-@author: aaronhorwin
+Performs matrix operations on processed data
+Lagrangian used to find minimum variance portfolios
 """
 
 import numpy as np

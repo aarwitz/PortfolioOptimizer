@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Use pandas dataframes to retrieve data from YahooFinance
+Use pandas dataframes to retrieve data from YahooFinance and process into
+matrix form using numpy
 """
 
 import pandas as pd
 import numpy as np
 import yfinance as yf
 from user import *
+from prints import *
 
 
 def get_prices(begin,end,tickers):
@@ -21,13 +23,29 @@ def get_prices(begin,end,tickers):
         Data = yf.Ticker(ticker)
         tickerDf = Data.history(period='1d', start=begin, end=end)
         df[ticker]=tickerDf['Close']
-    return df
+    if df.isnull().values.any():  # if any stock prices aren't available:
+        Tickers_with_missing_values = df.columns[df.isna().any()].tolist() # find those with missing values
+        first_date = df.dropna().iloc[:1].index[0].strftime("%Y-%m-%d %H:%M")[:-6] # beginning date all tickers values available
+        last_date = df.dropna().iloc[-1:].index[-1].strftime("%Y-%m-%d %H:%M")[:-6]
+        print_missing_tickers(Tickers_with_missing_values,first_date,last_date) # print which were missing and when all are listed
+        # user decides whether to begin analysis when all tickers' values are listed
+        # or remove tickers with any missing values
+        s_or_r = skip_or_remove()
+        if s_or_r == 'skip':
+            df=df.dropna(axis=0) #removes all rows with nan values
+            begin = first_date# change starting date
+            end = last_date
+        else:
+            df = df.dropna(axis=1) #removes all columns with nan values
+            # remvoe tickers with missing values from list:
+            [tickers.remove(Tickers_with_missing_values[i]) for i in range(len(Tickers_with_missing_values))]
+    return df,tickers,begin,end
     
 
 def get_returns(prices):
     """
     Input dataframe of adj close prices
-    returns a df
+    returns a df of returns
     """
     returns = prices.pct_change()
     return returns

@@ -5,7 +5,7 @@ This program finds the efficient frontier according to Markowitz mean return-var
 The portfolio can then be backtested in two ways: applying the model to other periods
 and conducting Monte Carlo simulation
 
-Call main to begin program
+*** Call main to begin program
 """
 
 from DF_helper import *
@@ -25,13 +25,13 @@ import numpy as np
 
 def main():
     """
-    Begin program
+    Begins program; runs primary functions
     """
     # initial ui
     start1,end1,tickers = get_portfolio_parameters()
     
     # returns data needed for analysis
-    stds,mean_returns,covar=process_data(start1,end1,tickers)
+    stds,mean_returns,covar,tickers,start1,end1=process_data(start1,end1,tickers)
     
     # find allocation weights and return of the minimum variance portfolio
     w_glob_min,r_glob_min = find_global_min(stds,mean_returns,covar)
@@ -59,12 +59,12 @@ def process_data(start1,end1,tickers):
     Input start,end dates and tickers
     Returns standard dev, mean_returns, and covar
     """
-    prices=get_prices(start1,end1,tickers)
+    prices,ticker,start1,end1=get_prices(start1,end1,tickers)
     returns=get_returns(prices)
     stds=returns.std()
     mean_returns = np_take_mean_of_returns(returns)
     covar=covar_to_np(returns)
-    return stds,mean_returns,covar
+    return stds,mean_returns,covar,tickers,start1,end1
     
 
 def find_global_min(stds,mean_returns,covar):
@@ -105,3 +105,5 @@ def backtest(stds,mean_returns,covar,start1,end1,tickers):
         # Plot curve in other period than used by model
         realtest_frontier(stds,mean_returns,covar,start1,end1,tickers)
         sequence(stds,mean_returns,covar,start1,end1,tickers)
+        
+        
