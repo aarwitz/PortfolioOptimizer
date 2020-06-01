@@ -1,4 +1,4 @@
-# PortfolioOptimizer
+# PortfolioOptimizerPythonProgram
 
 Program uses Mean-Variance Portfolio Theory to create optimal portfolios and provides backtesting capabilities. The user inputs a list of tickers and a period of time for which data is retrieved using YahooFinance's API. A model which outputs the lowest-variance portfolio for any given return is then created, along with a plot known as the efficient frontier. On the y-xis is daily returns and on the x-axis is the lowest standard deviation possible for each daily return.
 
