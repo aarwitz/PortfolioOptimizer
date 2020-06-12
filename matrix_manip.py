@@ -114,15 +114,3 @@ def calc_min_variance_portfolio(e,covar,r):
     z=z.flatten()
     
     return z[:-2]
-
-
-# def simulate
-
-
-def daily_to_annual(daily_r):
-    """
-    Input daily return as a percent
-    Returns that return on an annual basis as a percent
-    """
-    annual_r = (1+daily_r/100)**(365) - 1
-    return annual_r*100
